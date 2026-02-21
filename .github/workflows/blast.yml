@@ -1,0 +1,23 @@
+name: Email Blast
+on:
+  repository_dispatch:
+    types: [send-newsletter]
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Brevo API
+        run: |
+          curl --request POST \
+          --url https://api.brevo.com/v3/smtp/email \
+          --header 'accept: application/json' \
+          --header 'api-key: ${{ secrets.BREVO_API_KEY }}' \
+          --header 'content-type: application/json' \
+          --data '{
+            "sender": {"name": "المستقلة", "email": "themuslimindependent@gmail.com"},
+            "to": [{"email": "themuslimindependent@gmail.com"}],
+            "bcc": ${{ github.event.client_payload.emails }},
+            "subject": "${{ github.event.client_payload.title }}",
+            "htmlContent": "<div dir=\"rtl\" style=\"font-family:sans-serif;\"><h2>${{ github.event.client_payload.title }}</h2><p>تم نشر مقال جديد في المستقلة. يمكنك القراءة هنا:</p><br><a href=\"${{ github.event.client_payload.link }}\" style=\"padding:10px 20px; background:#000; color:#fff; text-decoration:none; border-radius:5px;\">اضغط هنا للقراءة</a></div>"
+          }'
