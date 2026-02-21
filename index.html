@@ -396,7 +396,7 @@ const GITHUB_TOKEN = "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";
                     const response = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/dispatches`, {
                         method: 'POST',
                         headers: {
-                            'Authorization': `token ${GITHUB_TOKEN}`,
+'Authorization': 'Bearer ' + GITHUB_TOKEN,
                             'Accept': 'application/vnd.github.v3+json',
                             'Content-Type': 'application/json'
                         },
